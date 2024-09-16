@@ -16,9 +16,12 @@ class Task(BoxLayout):
         super(Task, self).__init__(**kwargs)
         self.orientation = 'horizontal'
         self.checkbox = CheckBox(active=False)
-        self.textinput = TextInput(text="Write your task here", multiline=False)
+        self.textinput = TextInput(text="Write here", multiline=False)
         self.add_widget(self.checkbox)
         self.add_widget(self.textinput)
+        # self.remove_widget(self.checkbox)
+        # self.clear_widgets(self.checkbox)
+        
 
 class RemindMeApp (App):
     def build(self):
@@ -34,6 +37,16 @@ class RemindMeApp (App):
         add_task_button.bind(on_press=self.add_task)
         self.layout.add_widget(add_task_button)
 
+# Button to delete tasks
+        delete_task_button = Button(text="Delete Task")
+        delete_task_button.bind(on_press=self.delete_task)
+        self.layout.remove_widget(delete_task_button)
+
+# # Button to delete tasks
+#         clear_tasks_button = Button(text="Delete Task")
+#         clear_tasks_button.bind(on_press=self.clear_tasks)
+#         self.layout.remove_widget(clear_tasks_button)
+
 # Reset checkboxes at midnight
         Clock.schedule_interval(self.reset_checkboxes_at_midnight, 60) # Check every 60 seconds
         return self.layout
@@ -43,6 +56,18 @@ class RemindMeApp (App):
         task = Task()
         self.tasks.append(task)
         self.layout.add_widget(task)
+
+    def delete_task(self, instance):
+        #Delete a task
+        task = Task()
+        self.tasks.remove(task)
+        self.layout.remove_widget(task)
+
+    # def clear_tasks(self, instance):
+    #     #Clear all tasks
+    #     task = Task()
+    #     self.tasks.clear(task)
+    #     self.layout.clear_widgets(task)
 
     def reset_checkboxes_at_midnight(self, dt):
         current_time = datetime.now().strftime("%H:%M")
